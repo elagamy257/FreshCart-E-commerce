@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import img from "../../assets/images/freshcart.webp";
+import img from "../../assets/images/logo1.svg";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { userContext } from "../../context/userContext";
@@ -44,10 +44,10 @@ export default function Navbar() {
                 <div className="container">
                     <NavLink to="/" className="navbar-brand d-flex align-items-center">
                         <img src={img} alt="FreshCart Logo" style={{ width: "40px" }} />
-                        <span className="ms-2 fs-4 fw-bold" style={{ color: "#0d6efd" }}>
+                        <span className="ms-2 fs-4 fw-bold" style={{ color: "#f28c38" }}>
                             Fresh
                         </span>
-                        <span className="fs-4 fw-bold" style={{ color: "#f28c38" }}>
+                        <span className="fs-4 fw-bold" style={{ color: "#0d6efd" }}>
                             Cart
                         </span>
                     </NavLink>
