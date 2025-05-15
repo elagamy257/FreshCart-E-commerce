@@ -32,10 +32,11 @@ export default function Checkout() {
           { shippingAddress: values },
           {
             headers,
-            params: { url: "http://localhost:5173" },
+            params: { url: "http://localhost:5173" }, 
           }
         );
         window.location.href = data.session.url;
+        resetForm();
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
@@ -87,8 +88,7 @@ export default function Checkout() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         type="text"
-                        className={`form-control bg-gray-50 border border-gray-300 ${formik.touched.city && formik.errors.city ? "is-invalid" : ""
-                          }`}
+                        className={`form-control bg-gray-50 border border-gray-300 ${formik.touched.city && formik.errors.city ? "is-invalid" : ""}`}
                         name="city"
                         value={formik.values.city}
                         id="city"
@@ -108,8 +108,7 @@ export default function Checkout() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         type="tel"
-                        className={`form-control bg-gray-50 border border-gray-300 ${formik.touched.phone && formik.errors.phone ? "is-invalid" : ""
-                          }`}
+                        className={`form-control bg-gray-50 border border-gray-300 ${formik.touched.phone && formik.errors.phone ? "is-invalid" : ""}`}
                         name="phone"
                         value={formik.values.phone}
                         id="phone"
@@ -128,8 +127,7 @@ export default function Checkout() {
                       <textarea
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        className={`form-control bg-gray-50 border border-gray-300 ${formik.touched.details && formik.errors.details ? "is-invalid" : ""
-                          }`}
+                        className={`form-control bg-gray-50 border border-gray-300 ${formik.touched.details && formik.errors.details ? "is-invalid" : ""}`}
                         style={{ height: "100px" }}
                         name="details"
                         value={formik.values.details}
