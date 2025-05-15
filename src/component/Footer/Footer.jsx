@@ -1,7 +1,7 @@
 
 const Footer = () => {
     return (
-        <div className="bg-light py-5">
+        <div className="bg-light-10 py-5">
             <div className="container w-75 mx-auto py-5">
                 <div className="text-center">
                     <h1 className="fs-2 text-dark text-capitalize py-3">Get The FreshCart App</h1>

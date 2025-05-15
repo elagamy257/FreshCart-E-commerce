@@ -32,7 +32,7 @@ export default function Categories() {
     }
 
     return (
-        <div className="cat py-4 mt-4">
+        <div className="bg-light cat py-4 mt-4">
             <div className="container py-4" style={{ width: '60%', margin: '0 auto' }}>
                 <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center">
                     {categories.map((category, index) => (
