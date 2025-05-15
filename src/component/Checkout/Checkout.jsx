@@ -1,98 +1,215 @@
-import React from 'react'
-import { useFormik } from 'formik'
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
-
+import React, { useState } from "react";
+import { useFormik } from "formik";
+import axios from "axios";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import * as Yup from "yup";
+import toast from "react-hot-toast";
 
 export default function Checkout() {
-  let {cartId} = useParams()
-  
-  let headers = {
-    token: localStorage.getItem('userToken')
-  }
+  const { cartId } = useParams();
+  const navigate = useNavigate();
+  const [paymentType, setPaymentType] = useState("cash");
 
-  async function handleLogin(formsData){
+  const headers = {
+    token: localStorage.getItem("userToken"),
+  };
 
-  console.log('formData', formsData);
-
-  axios.post(`https://ecommerce.routemisr.com/api/v1/orders/checkout-session/${cartId}`,
-    {'shippingAddress' : formsData},
-
-    {
-      headers: headers,
-      params: {
-        url: 'http://localhost:5173'
+  async function handleOrder(values, { setSubmitting, resetForm }) {
+    try {
+      setSubmitting(true);
+      if (paymentType === "cash") {
+        const { data } = await axios.post(
+          `https://ecommerce.routemisr.com/api/v1/orders/${cartId}`,
+          { shippingAddress: values },
+          { headers }
+        );
+        resetForm();
+        toast.success(data.status || "Order placed successfully");
+        navigate("/allorders");
+      } else {
+        const { data } = await axios.post(
+          `https://ecommerce.routemisr.com/api/v1/orders/checkout-session/${cartId}`,
+          { shippingAddress: values },
+          {
+            headers,
+            params: { url: "http://localhost:5173" },
+          }
+        );
+        window.location.href = data.session.url;
       }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setSubmitting(false);
     }
-
-  )
-  
-  .then( (response)=>{ console.log('checkout' , response) 
-    location.href = response.data.session.url
-  } ) 
-  .catch( (error)=>{console.log('error' , error)} )
   }
-  
 
+  const validationSchema = Yup.object().shape({
+    details: Yup.string()
+      .required("Details are required")
+      .min(3, "At least input 3 characters"),
+    city: Yup.string()
+      .required("City is required")
+      .min(3, "At least input 3 characters"),
+    phone: Yup.string()
+      .required("Phone is required")
+      .matches(/^01[0125][0-9]{8}$/, "Phone must be an Egyptian number"),
+  });
 
-  let formik = useFormik({
-      initialValues:{
-        details:'',
-        phone:'',
-        city:''
-      },
-      
-      onSubmit: handleLogin
-    })
-
-
+  const formik = useFormik({
+    initialValues: {
+      details: "",
+      phone: "",
+      city: "",
+    },
+    onSubmit: handleOrder,
+    validationSchema,
+  });
 
   return (
-    <>
     <section className="bg-light py-3 py-md-5">
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4">
             <div className="card border border-light-subtle rounded-3 shadow-sm">
               <div className="card-body p-3 p-md-4 p-xl-5">
-                <div className="text-center mb-3">
-
-                </div>
-                <h2 className="fs-15 fw-normal text-center text-success mb-4">Pay Now</h2>
+                <div className="text-center mb-3"></div>
+                <h2 className="fs-4 fw-bold text-center text-primary mb-4">
+                  Payment
+                </h2>
                 <form onSubmit={formik.handleSubmit} action="#!">
                   <div className="row gy-2 overflow-hidden">
-
-    
                     <div className="col-12">
-                      <div className="form-floating mb-3">
-                        <input onChange={formik.handleChange} onBlur={formik.handleBlur} type="text" className= {`form-control ${formik.touched.details && formik.errors.details ? 'is-invalid' : ''}`} name="details" value={formik.values.details} id="details" placeholder="name@example.com" required/>
-                        <label htmlFor="details" className="form-label">Details</label>
-                      </div>
-                    </div>
-    
-                    <div className="col-12">
-                      <div className="form-floating mb-3">
-                        <input onChange={formik.handleChange} onBlur={formik.handleBlur} type="tel" className= {`form-control ${formik.touched.phone && formik.errors.phone ? 'is-invalid' : ''}`} name="phone" value={formik.values.phone} id="phone" placeholder="phone" required/>
-                        <label htmlFor="phone" className="form-label">Phone</label>   
-                      </div>
-                    </div>
-
-
-                    <div className="col-12">
-                      <div className="form-floating mb-3">
-                        <input onChange={formik.handleChange} onBlur={formik.handleBlur} type="text" className= {`form-control ${formik.touched.city && formik.errors.city ? 'is-invalid' : ''}`} name="city" value={formik.values.city} id="city" placeholder="city" required/>
-                        <label htmlFor="city" className="form-label">City</label>   
-                      </div>
-                    </div>
-    
-
-    
-                    <div className="col-12">
-                      <div className="d-grid my-3">
-                        <button className="btn btn-success btn-lg" type="submit">Pay Now</button>
-                      </div>
+                      <label htmlFor="city" className="form-label text-primary mb-1">
+                        City
+                      </label>
+                      <input
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        type="text"
+                        className={`form-control bg-gray-50 border border-gray-300 ${formik.touched.city && formik.errors.city ? "is-invalid" : ""
+                          }`}
+                        name="city"
+                        value={formik.values.city}
+                        id="city"
+                        placeholder="City"
+                        required
+                      />
+                      {formik.touched.city && formik.errors.city && (
+                        <div className="text-danger">{formik.errors.city}</div>
+                      )}
                     </div>
 
+                    <div className="col-12">
+                      <label htmlFor="phone" className="form-label text-primary mb-1">
+                        Phone
+                      </label>
+                      <input
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        type="tel"
+                        className={`form-control bg-gray-50 border border-gray-300 ${formik.touched.phone && formik.errors.phone ? "is-invalid" : ""
+                          }`}
+                        name="phone"
+                        value={formik.values.phone}
+                        id="phone"
+                        placeholder="Phone"
+                        required
+                      />
+                      {formik.touched.phone && formik.errors.phone && (
+                        <div className="text-danger">{formik.errors.phone}</div>
+                      )}
+                    </div>
+
+                    <div className="col-12">
+                      <label htmlFor="details" className="form-label text-primary mb-1">
+                        Details
+                      </label>
+                      <textarea
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        className={`form-control bg-gray-50 border border-gray-300 ${formik.touched.details && formik.errors.details ? "is-invalid" : ""
+                          }`}
+                        style={{ height: "100px" }}
+                        name="details"
+                        value={formik.values.details}
+                        id="details"
+                        placeholder="Details"
+                        required
+                      />
+                      {formik.touched.details && formik.errors.details && (
+                        <div className="text-danger">{formik.errors.details}</div>
+                      )}
+                    </div>
+
+                    <div className="col-12">
+                      <div className="form-check mb-2">
+                        <input
+                          disabled={
+                            !formik.isValid || !formik.dirty || formik.isSubmitting
+                          }
+                          value="cash"
+                          onChange={() => setPaymentType("cash")}
+                          checked={paymentType === "cash"}
+                          id="Cash"
+                          type="radio"
+                          name="paymentType"
+                          className="form-check-input"
+                        />
+                        <label
+                          htmlFor="Cash"
+                          className="form-check-label text-dark"
+                        >
+                          Cash
+                        </label>
+                      </div>
+                      <div className="form-check mb-3">
+                        <input
+                          disabled={
+                            !formik.isValid || !formik.dirty || formik.isSubmitting
+                          }
+                          value="online"
+                          onChange={() => setPaymentType("online")}
+                          checked={paymentType === "online"}
+                          id="Online"
+                          type="radio"
+                          name="paymentType"
+                          className="form-check-input"
+                        />
+                        <label
+                          htmlFor="Online"
+                          className="form-check-label text-dark"
+                        >
+                          Online
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="col-12">
+                      <div className="d-flex justify-content-end gap-2 my-3">
+                        <button
+                          type="submit"
+                          className="btn btn-primary btn-lg custom-hover-btn"
+                          disabled={
+                            !formik.isValid || !formik.dirty || formik.isSubmitting
+                          }
+                        >
+                          {formik.isSubmitting ? (
+                            <i className="fa-solid fa-spin fa-spinner text-white fa-lg"></i>
+                          ) : paymentType === "cash" ? (
+                            "Pay with Cash"
+                          ) : (
+                            "Pay Online"
+                          )}
+                        </button>
+                        <Link
+                          to="/cart"
+                          className="btn btn-danger btn-lg custom-hover-btn"
+                        >
+                          Cancel
+                        </Link>
+                      </div>
+                    </div>
                   </div>
                 </form>
               </div>
@@ -101,11 +218,5 @@ export default function Checkout() {
         </div>
       </div>
     </section>
-
-
-    </>
-  )
+  );
 }
-
-
-
