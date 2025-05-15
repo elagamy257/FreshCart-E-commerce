@@ -32,11 +32,10 @@ export default function Checkout() {
           { shippingAddress: values },
           {
             headers,
-            params: { url: "http://localhost:5173" }, 
+            params: { url: "http://localhost:5173" },
           }
         );
         window.location.href = data.session.url;
-        resetForm();
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
@@ -80,64 +79,20 @@ export default function Checkout() {
                 </h2>
                 <form onSubmit={formik.handleSubmit} action="#!">
                   <div className="row gy-2 overflow-hidden">
+
+    
                     <div className="col-12">
-                      <label htmlFor="city" className="form-label text-primary mb-1">
-                        City
-                      </label>
-                      <input
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        type="text"
-                        className={`form-control bg-gray-50 border border-gray-300 ${formik.touched.city && formik.errors.city ? "is-invalid" : ""}`}
-                        name="city"
-                        value={formik.values.city}
-                        id="city"
-                        placeholder="City"
-                        required
-                      />
-                      {formik.touched.city && formik.errors.city && (
-                        <div className="text-danger">{formik.errors.city}</div>
-                      )}
+                      <div className="form-floating mb-3">
+                        <input onChange={formik.handleChange} onBlur={formik.handleBlur} type="text" className= {`form-control ${formik.touched.details && formik.errors.details ? 'is-invalid' : ''}`} name="details" value={formik.values.details} id="details" placeholder="name@example.com" required/>
+                        <label htmlFor="details" className="form-label">Details</label>
+                      </div>
                     </div>
 
                     <div className="col-12">
-                      <label htmlFor="phone" className="form-label text-primary mb-1">
-                        Phone
-                      </label>
-                      <input
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        type="tel"
-                        className={`form-control bg-gray-50 border border-gray-300 ${formik.touched.phone && formik.errors.phone ? "is-invalid" : ""}`}
-                        name="phone"
-                        value={formik.values.phone}
-                        id="phone"
-                        placeholder="Phone"
-                        required
-                      />
-                      {formik.touched.phone && formik.errors.phone && (
-                        <div className="text-danger">{formik.errors.phone}</div>
-                      )}
-                    </div>
-
-                    <div className="col-12">
-                      <label htmlFor="details" className="form-label text-primary mb-1">
-                        Details
-                      </label>
-                      <textarea
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        className={`form-control bg-gray-50 border border-gray-300 ${formik.touched.details && formik.errors.details ? "is-invalid" : ""}`}
-                        style={{ height: "100px" }}
-                        name="details"
-                        value={formik.values.details}
-                        id="details"
-                        placeholder="Details"
-                        required
-                      />
-                      {formik.touched.details && formik.errors.details && (
-                        <div className="text-danger">{formik.errors.details}</div>
-                      )}
+                      <div className="form-floating mb-3">
+                        <input onChange={formik.handleChange} onBlur={formik.handleBlur} type="tel" className= {`form-control ${formik.touched.phone && formik.errors.phone ? 'is-invalid' : ''}`} name="phone" value={formik.values.phone} id="phone" placeholder="phone" required/>
+                        <label htmlFor="phone" className="form-label">Phone</label>   
+                      </div>
                     </div>
 
                     <div className="col-12">
@@ -218,3 +173,6 @@ export default function Checkout() {
     </section>
   );
 }
+
+
+
