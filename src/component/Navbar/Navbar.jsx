@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import img from "../../assets/images/logo1.svg";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useContext } from "react";
@@ -84,11 +84,6 @@ export default function Navbar() {
                                         </NavLink>
                                     </li>
                                     <li className="nav-item">
-                                        <NavLink to="carts" className="nav-link nav-link-custom">
-                                            Carts
-                                        </NavLink>
-                                    </li>
-                                    <li className="nav-item">
                                         <NavLink to="category" className="nav-link nav-link-custom">
                                             Category
                                         </NavLink>
@@ -96,6 +91,16 @@ export default function Navbar() {
                                     <li className="nav-item">
                                         <NavLink to="brands" className="nav-link nav-link-custom">
                                             Brands
+                                        </NavLink>
+                                    </li>
+                                    <li className="nav-item">
+                                        <NavLink to="carts" className="nav-link nav-link-custom">
+                                            Carts
+                                        </NavLink>
+                                    </li>
+                                    <li className="nav-item">
+                                        <NavLink to="allorders" className="nav-link nav-link-custom">
+                                            Order
                                         </NavLink>
                                     </li>
                                 </>

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import Loader from "../Loader/Loader"
+import Loader from "../Loader/Loader";
 import { Link } from "react-router-dom";
 import { cartContext } from "../../context/cartContext";
 import toast from "react-hot-toast";
@@ -18,14 +18,18 @@ export default function Home() {
     setLoadingProductId(id);
     try {
       const response = await addProductToCart(id);
-      if (response.data.status === 'success') {
+      if (response.data.status === "success") {
         toast.success(response.data.message);
       } else {
-        toast.error(response.data.message);
+        toast.error(response.data.message || "Failed to add product to cart");
       }
-    // eslint-disable-next-line no-unused-vars
     } catch (error) {
-      toast.error('Something went wrong');
+      const errorMessage =
+        error.response?.data?.message ||
+        (error.response?.status === 401
+          ? "Please log in to add products to your cart"
+          : "Something went wrong");
+      toast.error(errorMessage);
     } finally {
       setLoadingProductId(null);
     }
@@ -34,7 +38,7 @@ export default function Home() {
   async function getProducts() {
     try {
       setLoading(true);
-      const { data } = await axios.get('https://ecommerce.routemisr.com/api/v1/products');
+      const { data } = await axios.get("https://ecommerce.routemisr.com/api/v1/products");
       setProducts(data.data);
     } catch (error) {
       toast.error("Failed to load products.");
@@ -49,20 +53,18 @@ export default function Home() {
   }, []);
 
   if (isLoading) {
-      return (
-          <Loader/>
-      );
+    return <Loader />;
   }
 
   return (
-    <div className="py-5">
+    <section className="bg-light py-3 py-md-5">
       <div className="container">
         <div className="p-3">
           <HomeSlider />
         </div>
 
-        <div>
-          <h3 className="display-6 fw-bold mb-4 text-capitalize text-primary text-center">
+        <div className="mb-5">
+          <h3 className="display-6 fw-bold mb-4 text-primary text-center text-capitalize">
             Shop Popular Categories
           </h3>
           <CategorySlider />
@@ -71,14 +73,14 @@ export default function Home() {
         <div className="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3 p-3">
           {products.map((item, idx) => (
             <div key={idx} className="col">
-              <div className="card rounded-3 shadow-lg p-2 h-100">
+              <div className="card rounded-3 shadow-sm p-2 h-100">
                 <Link to={`/productDetails/${item.id}`} className="text-decoration-none">
                   <figure>
                     <img
-                      className="card-img-top rounded-top"
+                      className="card-img-top rounded-top img-fluid"
                       src={item.imageCover}
                       alt={item.title}
-                      style={{ height: '200px', objectFit: 'contain' }}
+                      style={{ height: "200px", objectFit: "contain" }}
                     />
                   </figure>
                   <div className="p-3">
@@ -96,14 +98,14 @@ export default function Home() {
                     </span>
                   </div>
                 </Link>
-                <div className="d-flex justify-content-between align-items-center p-2">
+                <div className="d-flex justify-content-center p-2">
                   <button
                     onClick={() => addProductItem(item.id)}
-                    className="w-75 fw-bold btn btn-primary rounded-3 text-white py-2 disabled:opacity-50"
+                    className="btn btn-primary w-75 rounded-3 py-2 text-white"
                     disabled={loadingProductId === item.id}
                   >
                     {loadingProductId === item.id ? (
-                      <i className="fas fa-spinner fa-spin fa-lg"></i>
+                      <i className="fas fa-spinner fa-spin"></i>
                     ) : (
                       "Add to cart"
                     )}
@@ -114,6 +116,6 @@ export default function Home() {
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }

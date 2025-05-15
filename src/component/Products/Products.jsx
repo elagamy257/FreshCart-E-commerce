@@ -14,6 +14,8 @@ export default function Products() {
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState("-ratingsAverage");
 
+  const { addProductToCart } = useContext(cartContext);
+
   const handleGetAllProducts = async () => {
     try {
       setLoader(true);
@@ -34,20 +36,22 @@ export default function Products() {
     }
   };
 
-  const { addProductToCart } = useContext(cartContext);
-
   async function getDataProduct(id) {
+    setLoading(id);
     try {
-      setLoading(id);
-      const data = await addProductToCart(id);
-      if (data.status === "success") {
-        toast.success(data.message);
+      const response = await addProductToCart(id);
+      if (response.data.status === "success") {
+        toast.success(response.data.message);
       } else {
-        toast.error(data.message);
+        toast.error(response.data.message || "Failed to add product to cart");
       }
-    // eslint-disable-next-line no-unused-vars
     } catch (error) {
-      toast.error("Something went wrong");
+      const errorMessage =
+        error.response?.data?.message ||
+        (error.response?.status === 401
+          ? "Please log in to add products to your cart"
+          : "Something went wrong");
+      toast.error(errorMessage);
     } finally {
       setLoading(null);
     }
@@ -72,11 +76,11 @@ export default function Products() {
   }
 
   return (
-    <div className="py-5">
+    <section className="bg-light py-3 py-md-5">
       <div className="container py-5">
         <div className="d-flex justify-content-center align-items-center gap-3 py-4">
-          <label htmlFor="sort" style={{ fontSize: "30px", padding: "5px 10px " }}>
-            <i className="fa-solid fa-filter text-primary fs-2"></i>
+          <label htmlFor="sort" className="fs-2 text-primary">
+            <i className="fa-solid fa-filter"></i>
           </label>
           <select
             value={sort}
@@ -101,13 +105,15 @@ export default function Products() {
                   <figure>
                     <img
                       src={item.imageCover}
-                      className="card-img-top rounded-top"
+                      className="card-img-top rounded-top img-fluid"
                       alt={item.title}
                       style={{ height: "200px", objectFit: "contain" }}
                     />
                   </figure>
                   <div className="p-2">
-                    <h5 className="fs-6 fw-bold text-primary">{item.title.split(" ", 5).join(" ")}</h5>
+                    <h5 className="fs-6 fw-bold text-primary">
+                      {item.title.split(" ", 5).join(" ")}
+                    </h5>
                     <p className="text-muted small">{item.category.name}</p>
                   </div>
                   <div className="d-flex justify-content-between align-items-center px-2 py-1">
@@ -141,12 +147,12 @@ export default function Products() {
           breakClassName="d-none"
           pageRangeDisplayed={5}
           marginPagesDisplayed={0}
-          pageCount={currentItem?.metadata?.numberOfPages ? Math.ceil(currentItem.metadata.numberOfPages) : 1}
+          pageCount={currentItem?.metadata?.numberOfPages || 1}
           onPageChange={handlePage}
           forcePage={page - 1}
           renderOnZeroPageCount={null}
         />
       </div>
-    </div>
+    </section>
   );
 }

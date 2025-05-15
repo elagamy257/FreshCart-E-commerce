@@ -124,7 +124,7 @@ const NewPassword = () => {
                       <div className="d-flex justify-content-end gap-2 my-3">
                         <button
                           type="submit"
-                          className="btn btn-primary btn-lg rounded-pill custom-hover-btn"
+                          className="btn btn-success btn-lg rounded-pill custom-hover-btn"
                           disabled={!formik.isValid || !formik.dirty || formik.isSubmitting}
                         >
                           {formik.isSubmitting ? (
