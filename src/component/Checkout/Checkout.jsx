@@ -189,7 +189,7 @@ export default function Checkout() {
                       <div className="d-flex justify-content-end gap-2 my-3">
                         <button
                           type="submit"
-                          className="btn btn-primary btn-lg custom-hover-btn"
+                          className="btn btn-primary rounded-pill px-3 py-2 btn-lg custom-hover-btn"
                           disabled={
                             !formik.isValid || !formik.dirty || formik.isSubmitting
                           }
@@ -203,8 +203,8 @@ export default function Checkout() {
                           )}
                         </button>
                         <Link
-                          to="/cart"
-                          className="btn btn-danger btn-lg custom-hover-btn"
+                          to="/carts"
+                          className="btn btn-danger rounded-pill px-3 py-2 btn-lg custom-hover-btn"
                         >
                           Cancel
                         </Link>
