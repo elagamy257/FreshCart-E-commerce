@@ -32,12 +32,15 @@ const NewPassword = () => {
         "https://ecommerce.routemisr.com/api/v1/auth/resetPassword",
         values
       );
+      console.log("API Response:", data); // Debug the response
       resetForm();
       toast.success("New password created successfully");
-      sessionStorage.clear();
-      navigate("/");
+      // Keep sessionStorage.getItem("code") unless confirmed unnecessary
+      // sessionStorage.clear(); // Comment out to test
+      navigate("/login"); // Redirect to login instead of home
       return data;
     } catch (error) {
+      console.log("Error Response:", error.response?.data); // Debug error details
       toast.error(error.response?.data?.message || "Something went wrong");
       return error;
     } finally {
@@ -71,53 +74,49 @@ const NewPassword = () => {
                 <form onSubmit={formik.handleSubmit} action="#!">
                   <div className="row gy-2 overflow-hidden">
                     <div className="col-12">
-                      <div className="form-floating mb-3">
-                        <input
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.email}
-                          type="email"
-                          className={`form-control ${
-                            formik.touched.email && formik.errors.email ? "is-invalid" : ""
-                          }`}
-                          name="email"
-                          id="email"
-                          placeholder="Enter Your Email"
-                          required
-                        />
-                        <label htmlFor="email" className="form-label text-primary">
-                          Email
-                        </label>
-                        {formik.touched.email && formik.errors.email ? (
-                          <div className="text-danger">{formik.errors.email}</div>
-                        ) : ""}
-                      </div>
+                      <label htmlFor="email" className="form-label text-primary mb-1">
+                        Email
+                      </label>
+                      <input
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.email}
+                        type="email"
+                        className={`form-control bg-gray-50 border border-gray-300 ${
+                          formik.touched.email && formik.errors.email ? "is-invalid" : ""
+                        }`}
+                        name="email"
+                        id="email"
+                        placeholder="Enter Your Email"
+                        required
+                      />
+                      {formik.touched.email && formik.errors.email ? (
+                        <div className="text-danger">{formik.errors.email}</div>
+                      ) : ""}
                     </div>
 
                     <div className="col-12">
-                      <div className="form-floating mb-3">
-                        <input
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.newPassword}
-                          type="password"
-                          className={`form-control ${
-                            formik.touched.newPassword && formik.errors.newPassword
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          name="newPassword"
-                          id="newPassword"
-                          placeholder="Enter Your New Password"
-                          required
-                        />
-                        <label htmlFor="newPassword" className="form-label text-primary">
-                          New Password
-                        </label>
-                        {formik.touched.newPassword && formik.errors.newPassword ? (
-                          <div className="text-danger">{formik.errors.newPassword}</div>
-                        ) : ""}
-                      </div>
+                      <label htmlFor="newPassword" className="form-label text-primary mb-1">
+                        New Password
+                      </label>
+                      <input
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.newPassword}
+                        type="password"
+                        className={`form-control bg-gray-50 border border-gray-300 ${
+                          formik.touched.newPassword && formik.errors.newPassword
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        name="newPassword"
+                        id="newPassword"
+                        placeholder="Enter Your New Password"
+                        required
+                      />
+                      {formik.touched.newPassword && formik.errors.newPassword ? (
+                        <div className="text-danger">{formik.errors.newPassword}</div>
+                      ) : ""}
                     </div>
 
                     <div className="col-12">

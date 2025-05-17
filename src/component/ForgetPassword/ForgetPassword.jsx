@@ -55,28 +55,25 @@ const ForgetPassword = () => {
                 <form onSubmit={formik.handleSubmit} action="#!">
                   <div className="row gy-2 overflow-hidden">
                     <div className="col-12">
-                      <div className="form-floating mb-3">
-                        <input
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          type="email"
-                          className={`form-control ${formik.touched.email && formik.errors.email
-                              ? "is-invalid"
-                              : ""
-                            }`}
-                          name="email"
-                          value={formik.values.email}
-                          id="email"
-                          placeholder="name@example.com"
-                          required
-                        />
-                        <label htmlFor="email" className="form-label text-primary">
-                          Email
-                        </label>
-                        {formik.touched.email && formik.errors.email ? (
-                          <div className="text-danger">{formik.errors.email}</div>
-                        ) : null}
-                      </div>
+                      <label htmlFor="email" className="form-label text-primary mb-1">
+                        Email
+                      </label>
+                      <input
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        type="email"
+                        className={`form-control bg-gray-50 border border-gray-300 ${
+                          formik.touched.email && formik.errors.email ? "is-invalid" : ""
+                        }`}
+                        name="email"
+                        value={formik.values.email}
+                        id="email"
+                        placeholder="name@example.com"
+                        required
+                      />
+                      {formik.touched.email && formik.errors.email ? (
+                        <div className="text-danger">{formik.errors.email}</div>
+                      ) : null}
                     </div>
 
                     <div className="col-12">
