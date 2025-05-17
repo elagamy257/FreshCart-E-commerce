@@ -32,7 +32,7 @@ export default function Checkout() {
           { shippingAddress: values },
           {
             headers,
-            params: { url: "http://localhost:5173" }, 
+            params: { url: "https://elagamy-freshcart.netlify.app/#" }, 
           }
         );
         window.location.href = data.session.url;
